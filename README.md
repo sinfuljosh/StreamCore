@@ -4,6 +4,12 @@ StreamCore is an IPA based mod designed to allow developers to create interactiv
 # Config File
 Config files can be found in the `UserData\StreamCore` folder. This folder will be referenced as the `config folder` for the remainder of this readme.
 
+# Mixer Integration
+Added basic Mixer function. You need to copy the two files in Plugins into Beat Sabers Plugins folder. You need to make an Oauth clientID in Mixer using the following, Website = "https://www.google.com"    Hosts = "localhost". And replace the ClientID in Chat/Mixer/MixerClient.cs with your new one. This will cause your local browser to load and perform an OAuth on every Beat Saber load. This will change to ShortCode going forward.  
+
+# Mixer API Used
+Since Mixer does not have its own SDK, There was an older C# package out there, but he appears to be updating it to include additional streaming platforms. I only built the ones needed to which are the ones placed in Plugins folder. You can find the source code for the Base.dll's [here](https://github.com/SaviorXTanren/mixer-client-csharp/tree/v1Changes).
+
 # Twitch Config
 Twitch configuration is very straightforward, click the link below to generate an OAuth token and copy it into the Twitch login file described below.
 
