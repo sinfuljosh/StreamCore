@@ -1,4 +1,5 @@
-﻿using StreamCore.Twitch;
+﻿using StreamCore.Mixer;
+using StreamCore.Twitch;
 using StreamCore.YouTube;
 using System;
 using System.Collections;
@@ -31,6 +32,10 @@ namespace StreamCore.Chat
     /// Implement this nterface to initialize the Twitch chat service
     /// </summary>
     public interface ITwitchIntegration : IGenericChatIntegration { }
+    /// <summary>
+    /// Implement this interface to initialize the Mixer chat service
+    /// </summary>
+    public interface IMixerIntegration : IGenericChatIntegration { }
 
 
     public class GlobalChatHandler
@@ -39,15 +44,17 @@ namespace StreamCore.Chat
 
         internal static ChatIntegration<ITwitchIntegration> Twitch = null;
         internal static ChatIntegration<IYouTubeIntegration> YouTube = null;
+        internal static ChatIntegration<IMixerIntegration> Mixer = null;
         internal static ChatIntegration<IGlobalChatIntegration> Global = null;
 
         internal static IEnumerator InitGlobalChatHandlers()
         {
             Twitch = new ChatIntegration<ITwitchIntegration>();
             YouTube = new ChatIntegration<IYouTubeIntegration>();
+            Mixer = new ChatIntegration<IMixerIntegration>();
             Global = new ChatIntegration<IGlobalChatIntegration>();
 
-            bool initTwitch = false, initYouTube = false;
+            bool initTwitch = false, initYouTube = false, initMixer = false;
             // Iterate through all the message handlers that were registered
             foreach (var instance in registeredInstances)
             {
@@ -72,6 +79,10 @@ namespace StreamCore.Chat
                 {
                     initYouTube = true;
                 }
+                if (typeof(IMixerIntegration).IsAssignableFrom(instanceType) || isGlobalIntegration)
+                {
+                    initMixer = true;
+                }
             }
 
             // Initialize the appropriate streaming services
@@ -83,6 +94,10 @@ namespace StreamCore.Chat
             {
                 YouTubeConnection.Initialize_Internal();
             }
+            if (initMixer)
+            {
+                MixerClient.Initialize_Internal();
+            }        
         }
     }
 
